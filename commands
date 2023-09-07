@@ -1,0 +1,5 @@
+docker pull public.ecr.aws/l6f4b6z9/new:latest
+
+docker tag public.ecr.aws/l6f4b6z9/new:latest liq/v2:latest
+
+docker run --rm -v {pwd where all the liquibase.properties and example db file are}:/liquibase/changelog liq/v2 --defaultsFile=/liquibase/changelog/liquibase.properties status
