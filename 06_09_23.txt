@@ -1,0 +1,166 @@
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase/liquibase --defaultsFile=/liquibase/changelog/liquibase.properties update
+
+
+ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase liquibase/liquibase --classpath=/liquibase/internal/lib/postgresql.jar --changelogFile=/liquibase/lib/example-changelog.sql --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres --username=postgres --password=postgres status
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase/liquibase --defaultsFile=/liquibase/changelog/liquibase.properties status
+
+liquibase-redshift-4.23.1.jar  redshift-jdbc42-2.1.0.18.jar
+
+
+nit-macra@hadoop-master:~/liquibase_new$ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v1 --defaultsFile=/liquibase/changelog/liquibase.properties update
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 12:56:11 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+Running Changeset: example-changelog.sql::4::atharva
+
+
+nit-macra@hadoop-master:~/liquibase_new$ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v1 --defaultsFile=/liquibase/changelog/liquibase.properties tag --tag=new1
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 13:03:21 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+Successfully tagged 'awsuser@jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev'
+Liquibase command 'tag' was executed successfully.
+
+
+
+docker build -t image_name/tag . --no-cache
+
+
+
+
+ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v2 --defaultsFile=/liquibase/changelog/liquibase.properties status
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 13:35:07 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+awsuser@jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev is up to date
+Liquibase command 'status' was executed successfully.
+nit-macra@hadoop-master:~/liquibase_new$ docker image rm -f liquibase/liquibase
+Untagged: liquibase/liquibase:latest
+Untagged: liquibase/liquibase@sha256:7e7d64c2967be6c7f19943a5d68ba18a37f51bb9f4a23bfb2443a67b496a12f5
+nit-macra@hadoop-master:~/liquibase_new$ docker images
+REPOSITORY                                          TAG              IMAGE ID       CREATED          SIZE
+liq/v2                                              latest           0856813ccbca   55 seconds ago   361MB
+liq/v1                                              latest           12db5b4df6e4   40 minutes ago   361MB
+mysql                                               latest           99afc808f15b   3 weeks ago      577MB
+mcr.microsoft.com/mssql/server                      2022-latest      683d523cd395   5 weeks ago      2.9GB
+alpine                                              3.14             9e179bacf43c   5 months ago     5.61MB
+container-registry.oracle.com/database/enterprise   latest           da441e2c6de2   11 months ago    8.01GB
+openjdk                                             11               47a932d998b7   13 months ago    654MB
+adoptopenjdk                                        11-jre-hotspot   2c57fb3bc67b   23 months ago    244MB
+docker                                              19.03.1          0cecfefe921f   4 years ago      216MB
+nit-macra@hadoop-master:~/liquibase_new$ vim example-changelog.sql
+nit-macra@hadoop-master:~/liquibase_new$ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v2 --defaultsFile=/liquibase/changelog/liquibase.properties status
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 13:36:24 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+1 changesets have not been applied to awsuser@jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev
+     example-changelog.sql::6::atharva
+Liquibase command 'status' was executed successfully.
+nit-macra@hadoop-master:~/liquibase_new$ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v2 --defaultsFile=/liquibase/changelog/liquibase.properties update
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 13:36:57 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+Running Changeset: example-changelog.sql::6::atharva
+
+UPDATE SUMMARY
+Run:                          1
+Previously run:               2
+Filtered out:                 0
+-------------------------------
+Total change sets:            3
+
+Liquibase: Update has been successful. Rows affected: 1
+Liquibase command 'update' was executed successfully.
+
+nit-macra@hadoop-master:~/liquibase_new$ docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liq/v2 --defaultsFile=/liquibase/changelog/liquibase.properties tag --tag=new3
+####################################################
+##   _     _             _ _                      ##
+##  | |   (_)           (_) |                     ##
+##  | |    _  __ _ _   _ _| |__   __ _ ___  ___   ##
+##  | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \  ##
+##  | |___| | (_| | |_| | | |_) | (_| \__ \  __/  ##
+##  \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|  ##
+##              | |                               ##
+##              |_|                               ##
+##                                                ##
+##  Get documentation at docs.liquibase.com       ##
+##  Get certified courses at learn.liquibase.com  ##
+##                                                ##
+####################################################
+Starting Liquibase at 13:38:49 (version 4.23.1 #12042 built at 2023-08-10 13:48+0000)
+Liquibase Version: 4.23.1
+Liquibase Open Source 4.23.1 by Liquibase
+Successfully tagged 'awsuser@jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev'
+Liquibase command 'tag' was executed successfully.
+

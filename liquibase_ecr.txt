@@ -1,0 +1,255 @@
+Navigate to your project folder in the CLI and run the Liquibase status command to see whether the connection is successful:
+liquibase status --username=test --password=test --changelog-file=<changelog.xml>
+
+
+Build docker image
+docker build -t <image name> .
+
+Run docker image
+docker run -it my-image
+
+
+build docker image for arm 64 linux
+docker build -t my-arm64-image -f Dockerfile.arm64 .
+
+
+# Working command for liquibase
+ sudo docker build -t liquibase-v1 .
+ 
+# AWS ecr authenticate 
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 669291503128.dkr.ecr.ap-south-1.amazonaws.com
+ 
+ # AWC cli
+ 
+ AWS Access Key ID [None]: AKIAZXVHB3YMCPPF3K2D
+AWS Secret Access Key [None]: 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
+Default region name [None]: ap-south-1
+
+# AWS ecr error like -> permission denied
+
+sudo usermod -aG docker $USER
+newgrp docker
+
+# After loging in 
+
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 669291503128.dkr.ecr.ap-south-1.amazonaws.com
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/l6f4b6z9
+
+WARNING! Your password will be stored unencrypted in /home/athar/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+# S3 from aws cli
+aws s3 ls
+
+
+# tag image with ecr reg.
+docker tag e9ae3c220b23 aws_account_id.dkr.ecr.us-west-2.amazonaws.com/my-repository:tag
+
+docker tag e4031d3125eb 669291503128.dkr.ecr.ap-south-1.amazonaws.com/demo:liquibase-v1
+
+docker tag demo:latest public.ecr.aws/l6f4b6z9/demo:latest
+           <replace with latest image id>           <replace with the tag you want in aws ecr>
+docker tag 2a29551f4f58 public.ecr.aws/l6f4b6z9/demo:latest
+
+# Push docker image
+docker push 669291503128.dkr.ecr.ap-south-1.amazonaws.com/demo:liquibase-v1
+docker push public.ecr.aws/l6f4b6z9/demo:liquibase-v2
+
+docker push public.ecr.aws/l6f4b6z9/demo:latest
+                                         <tagged image name/id?>
+
+# Error from VM when building docer liq image
+WARNING: Running pip as the 'root' user can result in brokens and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+# Error while tagging docker image with ecr
+WARNING: Error loading config file: /home/nit-macra/.docker/config.json: open /home/nit-macra/.docker/config.json: permission denied
+Error response from daemon: No such image: e9ae3c220b23:latest
+> check newely built image id
+
+# Errors while pushing
+no basic auth credentials
+authenticate with aws ecr
+
+Error saving credentials: open /home/nit-macra/.docker/config.json267214266: permission denied
+Two solutions
+1. sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
+   sudo chmod g+rwx "/home/$USER/.docker" -R
+https://askubuntu.com/questions/747778/docker-warning-config-json-permission-denied
+
+2. rm ~/.docker/config.json  -> (change this path to actual config.json (read error again))
+https://stackoverflow.com/questions/42787779/docker-login-error-storing-credentials-write-permissions-error
+
+# Add more policies to Iam role
+Iam > user > select user > group name
+IAM
+User groups
+lb_grp
+add permissions
+attach policy
+
+
+
+# Delete docker images
+docker image rm <image id or name>
+
+
+# Docker image check
+docker images --filter reference=<image id>
+
+
+### Wrong commands
+
+docker run --rm -v example-changelog.sql:/changelogs public.ecr.aws/l6f4b6z9/demo:liquibase-v1 update
+
+docker run --rm -v example-changelog.sql:/changelogs 669291503128.dkr.ecr.us-west-2.amazonaws.com/demo:liquibase-v1 update
+
+docker run --rm -v example-changelog.sql:/changelogs public.ecr.aws/l6f4b6z9/demo:liquibase-v1 update
+
+docker run --rm -v example-changelog.sql:/changelogs -v liquibase.properties:/liquibase.properties public.ecr.aws/l6f4b6z9/demo:liquibase-v1 update
+
+### 
+
+
+docker run --rm -v example-changelog.sql:/changelogs -v liquibase.properties:/liquibase.properties 669291503128.dkr.ecr.us-east-1.amazonaws.com/demo:liquibase-v1: --defaultsFile=/liquibase.properties update
+docker run --rm -v example-changelog.sql:/changelogs -v liquibase.properties:/liquibase.properties public.ecr.aws/l6f4b6z9/demo:liquibase-v1: --defaultsFile=/liquibase.properties update
+
+# git token
+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
+
+
+
+# to get docker image container
+docker run -t liquibase-v1
+got to another terminal -> docker ps -> get container id / name
+
+# Stop contianer
+docker stop amazing_poincare
+            <container id>
+
+
+
+
+## Running image from ecr in ecs
+
+docker run -it -v $(pwd)/liquibase.properties:/liquibase/liquibase.properties liquibase-v4 liquibase update
+
+docker run -it -v $(pwd)/liquibase.properties:/liquibase/liquibase.properties liquibase-v4 liquibase --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres --changeLogFile=example-changelog.sql update
+
+docker run -it -v $(pwd)/liquibase.properties:/liquibase/liquibase.properties liquibase-v4 liquibase --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres --changeLogFile=example-changelog.sql --username=postgres --password=postgres update
+
+docker run -it -v $(pwd)/liquibase.properties:/liquibase/liquibase.properties $(pwd)/example-changelog.sql:/liquibase/changelog liquibase-v4 liquibase --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres --changeLogFile=/liquibase/changelog/example-changelog.sql --username=your-username --password=your-password update
+
+docker run -it -v example-changelog.sql:/liquibase/changelog liquibase-v4 liquibase --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres --changeLogFile=/liquibase/changelog/example-changelog.sql --username=postgres --password=postgres update
+
+
+docker run -it liquibase-v4 liquibase --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres --changeLogFile=example-changelog.sql update
+
+docker run -it  --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" --changeLogFile="example-changelog.sql" update
+
+docker run --rm -v example-changelog.sql:/liquibase/changelog liquibase/liquibase update--changelog-file=com/example/changelogs/root.changelog.xml
+
+
+docker run --rm -v /home/nit-macra/docker_liquibase_redshift/demo/v4:/liquibase/changelog liquibase/liquibase
+  --license-key="<PASTE LB PRO LICENSE KEY HERE>"
+update 
+  --url=jdbc:postgresql://<IP OR HOSTNAME>:5432/<DATABASE>?currentSchema=<SCHEMA NAME> 
+  --changelog-file=com/example/changelog.xml --username=<USERNAME> 
+  --password=<PASSWORD>
+
+
+
+
+docker run -it liquibase-v4 /bin/bash
+
+docker run -it liquibase-v2 --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" --changelogfile="example-changelog.sql" update
+
+docker run -it v10 --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" --changelogfile="example-changelog.sql" update
+
+docker run -it -v --changelogfile=example-changelog.sql:/liquibase/changelog liquibase-v5 --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" update
+
+
+
+docker run -it liquibase-v6 --url="jdbc:redshift://redshift-cluster-1.cz9pcdk4rfsf.ap-south-1.redshift.amazonaws.com:5439/dev?user=awsuser&password=Aws_user1;connection.setAutoCommit=true" --driver="com.amazon.redshift.jdbc42.Driver" --changelogfile="changeLog.xml" status
+
+
+
+docker run -it liquibase-v8 liquibase --defaultsFile=/liquibase/liquibase.properties --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" --changeLogFile="example-changelog.sql" --driver="com.amazon.redshift.Driver" update
+
+
+
+
+
+# flow
+
+inside vm
+
+git pull from bitbucket -> clone from bitbucket
+create reg 
+git clone <from bit bucket>  -> password (not ususal pas)
+
+pull
+
+cd to new dir
+
+git checkout -b new_branch   (switch to new branch)
+
+make changes to exmaple.sql
+
+make changes to author:id
+
+git add .
+
+git commit -m" "
+
+git push --set-upstream origin branch  (pushed)
+
+bit bucket -> create pull request  -> approve and merge
+
+liquibase --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changelogfile="blank-changelog.sql" --driver="com.amazon.redshift.Driver" status
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase-v1/liquibase status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changelogfile="example-changelog.sql" --driver="com.amazon.redshift.Driver" 
+
+##Check git best practices
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##Liquibase problems to Check
+
+1. repo management
+2. create liquibase docker image of local file
+
+
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase/liquibase status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changelog-file=example-changelog.sql --driver="com.amazon.redshift.Driver" 
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase-v1 status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changelogfile="example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog liquibase-v1 status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changelogfile="example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog v1 liquibase status --url="jdbc:redshift://redshift-details" --changelogfile="example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog v1 liquibase status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changeLogFile="example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog v1 liquibase status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changeLogFile="/liquibase/changelog/example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog v1 liquibase --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changeLogFile="/liquibase/changelog/example-changelog.sql" --driver="com.amazon.redshift.jdbc.Driver" status
+
+https://github.com/liquibase/liquibase/releases/download/v4.23.1/liquibase-4.23.1.zip
+
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/changelog v1 liquibase --defaultsFile=liquibase.properties --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?username=awsuser&password=Aws_user1" --changeLogFile="example-changelog.sql" status
+
+## Abhsihek SIr command
+liquibase --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?user=awsuser&password=Aws_user1" --changelogfile="blank-changelog.sql" --driver="com.amazon.redshift.Driver" status
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/lib v3 liquibase status --url="jdbc:redshift://redshift-cluster-1.cuwllcnk0yo3.us-east-2.redshift.amazonaws.com:5439/dev?user=awsuser&password=Aws_user1" --driver="com.amazon.redshift.Driver" --changeLogFile="/liquibase/lib/example-changelog.s
+ql"
+
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase/lib v3 liquibase status --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres?user=postgres&password=postgres" --changeLogFile=example-changelog.sql
+
+
+docker run --rm -v "$(pwd):liquibase" v3 liquibase --classpath=/liquibase/lib/postgresql.jar --changeLogFile=/liquibase/example-changelog.sql --url="jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres" --username="postgres" --password="postgres" status
+docker run --rm -v /home/nit-macra/liquibase_new:/liquibase v3 liquibase status --changeLogFile="/liquibase/example-changelog.sql" --url=jdbc:postgresql://postgres-db-1.cif40dhiubjo.ap-south-1.rds.amazonaws.com:5432/postgres" --username="postgres" --driver="com.amazon.redshift.Driver" 
